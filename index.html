@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carta de Amor</title>
+
+  <style>
+    :root{
+      --bg1:#07030f;
+      --bg2:#120523;
+      --paper:#0f0a18;
+      --ink:#f5eaff;
+      --muted:#cdb7e6;
+
+      --gold:#d8b56a;
+      --gold2:#f3dd9a;
+
+      --violet:#a855f7;
+      --violet2:#d946ef;
+      --violet3:#7c3aed;
+
+      --border: rgba(216,181,106,0.35);
+      --soft: rgba(255,255,255,0.06);
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family: "Georgia", "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 800px at 15% 10%, rgba(168,85,247,0.22), transparent 55%),
+        radial-gradient(1000px 700px at 85% 20%, rgba(217,70,239,0.18), transparent 60%),
+        radial-gradient(900px 700px at 50% 95%, rgba(216,181,106,0.14), transparent 60%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .wrap{
+      width:min(920px, 100%);
+      position:relative;
+    }
+
+    /* Brillos decorativos */
+    .glow-orb{
+      position:absolute;
+      border-radius:50%;
+      filter: blur(35px);
+      opacity:0.55;
+      z-index:0;
+      pointer-events:none;
+    }
+    .orb1{
+      width:220px; height:220px;
+      background: rgba(168,85,247,0.55);
+      top:-40px; left:-50px;
+    }
+    .orb2{
+      width:260px; height:260px;
+      background: rgba(217,70,239,0.45);
+      bottom:-70px; right:-60px;
+    }
+    .orb3{
+      width:200px; height:200px;
+      background: rgba(216,181,106,0.35);
+      top:50%; left:55%;
+      transform: translate(-50%,-50%);
+    }
+
+    .letter{
+      position:relative;
+      z-index:2;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
+        radial-gradient(900px 600px at 20% 0%, rgba(216,181,106,0.08), transparent 60%),
+        radial-gradient(900px 600px at 80% 100%, rgba(168,85,247,0.08), transparent 65%),
+        var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 44px 42px;
+      box-shadow:
+        0 25px 60px rgba(0,0,0,0.65),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+      overflow:hidden;
+    }
+
+    /* Marco ornamental */
+    .letter:before{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border-radius:18px;
+      border:1px solid rgba(216,181,106,0.20);
+      pointer-events:none;
+    }
+
+    /* Esquinas */
+    .corner{
+      position:absolute;
+      width:72px;
+      height:72px;
+      border:1px solid rgba(216,181,106,0.35);
+      opacity:0.7;
+      pointer-events:none;
+    }
+    .c1{ top:22px; left:22px; border-right:none; border-bottom:none; border-radius:18px 0 0 0;}
+    .c2{ top:22px; right:22px; border-left:none; border-bottom:none; border-radius:0 18px 0 0;}
+    .c3{ bottom:22px; left:22px; border-right:none; border-top:none; border-radius:0 0 0 18px;}
+    .c4{ bottom:22px; right:22px; border-left:none; border-top:none; border-radius:0 0 18px 0;}
+
+    .header{
+      text-align:center;
+      margin-bottom:26px;
+    }
+
+    .date{
+      font-size: 15px;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+      margin-bottom:10px;
+    }
+
+    .title{
+      font-size: 30px;
+      font-weight: 700;
+      margin:0;
+      color: var(--gold2);
+      text-shadow: 0 0 18px rgba(216,181,106,0.18);
+    }
+
+    .divider{
+      width: 170px;
+      height: 2px;
+      margin: 18px auto 0 auto;
+      background: linear-gradient(90deg, transparent, rgba(216,181,106,0.85), transparent);
+      border-radius: 999px;
+      position:relative;
+    }
+    .divider:after{
+      content:"✦";
+      position:absolute;
+      top:-12px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:18px;
+      color: rgba(216,181,106,0.9);
+      text-shadow: 0 0 12px rgba(216,181,106,0.25);
+    }
+
+    .content{
+      margin-top: 26px;
+      font-size: 18px;
+      line-height: 1.85;
+      color: rgba(245,234,255,0.96);
+    }
+
+    .salute{
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold2);
+      margin-bottom:14px;
+      text-shadow: 0 0 12px rgba(216,181,106,0.16);
+    }
+
+    p{
+      margin: 0 0 16px 0;
+    }
+
+    /* Texto destacado en strong */
+    strong{
+      color: #ffffff;
+      font-weight: 800;
+      text-shadow: 0 0 10px rgba(255,255,255,0.10);
+    }
+
+    .quote-block{
+      margin: 22px 0;
+      padding: 18px 18px;
+      border-left: 3px solid rgba(216,181,106,0.65);
+      background: rgba(255,255,255,0.03);
+      border-radius: 14px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+      color: rgba(245,234,255,0.98);
+    }
+
+    .quote-block span{
+      color: var(--gold2);
+      font-weight: 700;
+    }
+
+    .signature{
+      margin-top: 30px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(216,181,106,0.18);
+      text-align: right;
+    }
+
+    .sig-text{
+      font-size: 18px;
+      color: rgba(245,234,255,0.95);
+      margin-bottom: 10px;
+    }
+
+    .name{
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--gold2);
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 16px rgba(216,181,106,0.18);
+    }
+
+    /* Neon morado final */
+    .final-phrase{
+      margin-top: 28px;
+      padding: 22px 18px;
+      border-radius: 18px;
+      text-align:center;
+      background:
+        radial-gradient(600px 200px at 50% 0%, rgba(168,85,247,0.22), transparent 60%),
+        radial-gradient(600px 220px at 50% 100%, rgba(217,70,239,0.20), transparent 60%),
+        rgba(255,255,255,0.03);
+      border: 1px solid rgba(168,85,247,0.35);
+      box-shadow:
+        0 0 22px rgba(168,85,247,0.18),
+        0 0 40px rgba(217,70,239,0.10),
+        inset 0 0 0 1px rgba(255,255,255,0.02);
+    }
+
+    .neon-purple{
+      color: #e9d5ff;
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: 0.3px;
+      text-shadow:
+        0 0 4px rgba(168,85,247,0.65),
+        0 0 10px rgba(168,85,247,0.55),
+        0 0 18px rgba(217,70,239,0.55),
+        0 0 30px rgba(124,58,237,0.45),
+        0 0 48px rgba(168,85,247,0.35);
+    }
+
+    .neon-purple span{
+      color: #ffffff;
+      text-shadow:
+        0 0 6px rgba(168,85,247,0.85),
+        0 0 14px rgba(217,70,239,0.65),
+        0 0 28px rgba(168,85,247,0.55),
+        0 0 50px rgba(124,58,237,0.45);
+      font-weight: 900;
+    }
+
+    .footer-heart{
+      margin-top: 12px;
+      font-size: 16px;
+      color: rgba(233,213,255,0.9);
+      text-shadow: 0 0 14px rgba(168,85,247,0.30);
+    }
+
+    /* Responsive */
+    @media (max-width: 680px){
+      .letter{
+        padding: 34px 22px;
+      }
+      .title{
+        font-size: 26px;
+      }
+      .content{
+        font-size: 17px;
+        line-height: 1.8;
+      }
+      .neon-purple{
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="glow-orb orb1"></div>
+    <div class="glow-orb orb2"></div>
+    <div class="glow-orb orb3"></div>
+
+    <div class="letter">
+      <div class="corner c1"></div>
+      <div class="corner c2"></div>
+      <div class="corner c3"></div>
+      <div class="corner c4"></div>
+
+      <div class="header">
+        <div class="date">Martes, 28 de abril de 2026 — Noche</div>
+        <h1 class="title">Carta para el amor de mi vida</h1>
+        <div class="divider"></div>
+      </div>
+
+      <div class="content">
+        <div class="salute">Mi amor,</div>
+
+        <p>
+          Esta noche no sé cómo empezar… porque siento que cualquier palabra se queda pequeña para lo que me provocas,
+          para lo que despiertas dentro de mí, para lo que eres en mi vida. Pero aun así lo intento, porque mi corazón
+          no sabe quedarse callado cuando se trata de ti.
+        </p>
+
+        <p>
+          Hoy, mientras el mundo seguía girando como si nada, yo te llevaba conmigo en cada pensamiento. En cada momento.
+          En cada suspiro. Y me di cuenta de algo que ya sabía, pero que esta noche se siente más fuerte que nunca:
+          <strong>tú no eres una parte bonita de mi vida… tú eres la vida misma en mí.</strong>
+        </p>
+
+        <p>
+          Porque desde que llegaste, todo cambió.<br/>
+          Cambió mi manera de mirar las noches.<br/>
+          Cambió mi manera de imaginar el futuro.<br/>
+          Cambió mi forma de sentir el amor… porque contigo el amor dejó de ser una idea y se volvió algo real, intenso,
+          vivo, ardiente, algo que quema por dentro y al mismo tiempo cura.
+        </p>
+
+        <p>
+          <strong>Mi amor… tú me haces sentir cosas que no sabía que un ser humano podía sentir.</strong>
+        </p>
+
+        <p>
+          A veces pienso que tu nombre debería estar escrito en mi pecho, porque mi corazón late como si te llamara.
+          Como si cada latido pronunciara tu existencia. Como si mi cuerpo entero te reconociera como su destino.
+        </p>
+
+        <div class="quote-block">
+          Y esta noche… esta noche te pienso con una desesperación hermosa.<br/>
+          Con esa necesidad que no es vacía, sino profunda.<br/>
+          Con esa urgencia que nace cuando uno ama de verdad.
+        </div>
+
+        <p>
+          Porque yo no te quiero a medias.<br/>
+          Yo no te quiero por ratos.<br/>
+          Yo no te quiero solo cuando todo está bien.
+        </p>
+
+        <p>
+          <strong>Yo te quiero completa.</strong><br/>
+          Te quiero en tus risas y en tus silencios.<br/>
+          Te quiero en tu luz y en tus tormentas.<br/>
+          Te quiero cuando estás feliz, y te quiero incluso cuando estás cansada, cuando sientes que el mundo pesa…
+          porque yo quiero ser el lugar donde descanses, donde te sientas segura, donde te sientas amada como mereces.
+        </p>
+
+        <p><strong>Y sí… yo te deseo.</strong></p>
+
+        <p>
+          Te deseo con el alma, con la mente, con el cuerpo.<br/>
+          Te deseo con esa intensidad que no se puede controlar.<br/>
+          Con esa pasión que me atraviesa cuando imagino tu piel, tu aroma, tu mirada…
+        </p>
+
+        <p>
+          Porque tú no eres solo hermosa.<br/>
+          <strong>Tú eres peligrosa…</strong><br/>
+          Peligrosa para mi calma.<br/>
+          Peligrosa para mi autocontrol.<br/>
+          Peligrosa para mi corazón, porque lo tienes en tus manos como si siempre hubiera sido tuyo.
+        </p>
+
+        <p>
+          Mi amor… a veces me pregunto si tú entiendes lo que causas en mí.
+        </p>
+
+        <p>
+          Cuando pienso en ti, siento que todo se acelera.<br/>
+          Siento que mi pecho se llena de fuego.<br/>
+          Siento que me falta el aire.<br/>
+          Y no es exageración… es que tú me enciendes de una manera que nadie más podría.
+        </p>
+
+        <p>
+          Eres mi debilidad.<br/>
+          Mi tentación.<br/>
+          Mi locura más dulce.<br/>
+          Mi sueño más intenso.
+        </p>
+
+        <p>
+          Y lo más increíble es que no solo me atraes… <strong>me conquistas.</strong><br/>
+          Me conquistas con tu esencia.<br/>
+          Con tu manera de existir.<br/>
+          Con tu forma de ser mujer.
+        </p>
+
+        <p>
+          Porque tú no eres cualquier mujer… <strong>tú eres esa mujer que uno no olvida jamás.</strong><br/>
+          Esa mujer que marca la vida.<br/>
+          Esa mujer que llega y cambia todo.
+        </p>
+
+        <p>
+          Y yo lo siento… lo sé… lo tengo claro:
+        </p>
+
+        <p><strong>yo nací para amarte.</strong></p>
+
+        <p>
+          Quizá el mundo diría que es una frase intensa… pero mi amor, si supieran lo que yo siento, entenderían que no es
+          intensidad… es verdad.
+        </p>
+
+        <p>
+          Yo no quiero un amor de cuentos.<br/>
+          Yo quiero un amor real… y lo quiero contigo.<br/>
+          Quiero despertar un día y verte ahí.<br/>
+          Quiero mirarte sin decir nada y saber que eres mi hogar.<br/>
+          Quiero cuidarte.<br/>
+          Quiero abrazarte cuando el mundo te canse.<br/>
+          Quiero besarte cuando la vida te sonría.<br/>
+          Quiero tomarte de la mano y caminar contigo sin importar la distancia.
+        </p>
+
+        <p>
+          Porque tú… tú eres la única persona con la que yo podría vivirlo todo.
+        </p>
+
+        <p>
+          Yo quiero tus días buenos y tus días difíciles.<br/>
+          Quiero tus sueños, tus metas, tus miedos, tus dudas.<br/>
+          Quiero tu historia entera, no solo tus capítulos bonitos.
+        </p>
+
+        <div class="quote-block">
+          Y si alguna vez te sientes insegura… si alguna vez te sientes insuficiente… si alguna vez piensas que no eres perfecta…
+          te lo juro, amor, mírame bien y escucha lo que te voy a decir:<br/><br/>
+          <span>para mí, tú eres lo más perfecto que existe.</span>
+        </div>
+
+        <p>
+          Y no porque no tengas defectos… sino porque incluso tus imperfecciones me parecen humanas, reales, hermosas…
+          y porque tú tienes algo que no se compra ni se aprende:<br/>
+          <strong>tú tienes un corazón que vale oro.</strong>
+        </p>
+
+        <p><strong>Esta noche quiero confesarte algo…</strong></p>
+
+        <p>
+          Cuando estoy lejos de ti, te extraño como si me faltara una parte del cuerpo.<br/>
+          Como si me arrancaran algo.<br/>
+          Como si mi alma no pudiera estar completa sin tu presencia.
+        </p>
+
+        <p>
+          Y cuando estás cerca… cuando te veo… cuando te siento… es como si el universo se acomodara.
+          Como si todo tuviera sentido.
+        </p>
+
+        <p>
+          Mi amor… yo quiero ser el hombre que te haga sentir la mujer más amada del mundo.<br/>
+          Quiero que nunca dudes de lo que siento.<br/>
+          Quiero que cada vez que pienses en mí, sientas tranquilidad… porque sabes que aquí tienes un amor verdadero,
+          un amor leal, un amor que no se rinde.
+        </p>
+
+        <p>
+          Yo no te prometo una vida perfecta…<br/>
+          pero sí te prometo algo mejor:
+        </p>
+
+        <p><strong>te prometo una vida contigo.</strong></p>
+
+        <p>
+          Una vida donde cada día voy a elegirte.<br/>
+          Donde cada noche voy a cuidarte.<br/>
+          Donde cada beso será un recordatorio de que eres mi todo.
+        </p>
+
+        <p>
+          Porque yo no estoy contigo por costumbre…<br/>
+          yo estoy contigo porque <strong>te amo de una forma brutal.</strong>
+        </p>
+
+        <p>
+          Te amo con una intensidad que me desarma.<br/>
+          Te amo con una pasión que me consume.<br/>
+          Te amo con un sentimiento que no se puede explicar… porque es demasiado grande.
+        </p>
+
+        <p>
+          Y esta noche, mientras el silencio envuelve todo, yo solo puedo pensar en una cosa:
+        </p>
+
+        <p>
+          <strong>yo quiero que seas mía… pero no solo en palabras.</strong><br/>
+          Quiero que seas mía en la vida.<br/>
+          En los días.<br/>
+          En los años.<br/>
+          En el futuro.
+        </p>
+
+        <p>
+          Quiero besarte hasta que se me olvide el mundo.<br/>
+          Quiero abrazarte hasta que el tiempo se rinda.<br/>
+          Quiero perderme en ti, en tu piel, en tu mirada…<br/>
+          y que cada vez que te tenga cerca, el universo sepa que yo encontré mi lugar.
+        </p>
+
+        <p>
+          Porque mi lugar no es un sitio…<br/>
+          <strong>mi lugar eres tú.</strong>
+        </p>
+
+        <p>
+          Y si esta noche pudiera tener un solo deseo… pediría estar contigo ahora mismo.<br/>
+          Poder mirarte de frente.<br/>
+          Acariciar tu rostro con calma.<br/>
+          Decirte al oído lo que esta carta apenas intenta explicar:
+        </p>
+
+        <p>
+          Que te amo…<br/>
+          que te amo demasiado…<br/>
+          que te amo de una forma que no tiene final.
+        </p>
+
+        <p>
+          Y si el mundo me preguntara qué es lo que más quiero en la vida… yo no diría riquezas, ni suerte, ni fama…
+        </p>
+
+        <p><strong>Yo diría tu nombre.</strong></p>
+
+        <p>
+          Porque tú eres mi felicidad.<br/>
+          Mi paz.<br/>
+          Mi deseo.<br/>
+          Mi amor.<br/>
+          Mi razón.
+        </p>
+
+        <p><strong>Mi mujer.</strong></p>
+
+        <p>
+          Y aunque no esté ahí contigo en este momento, quiero que sientas esto como un abrazo largo… como un beso que se queda…
+          como una promesa que no se rompe:
+        </p>
+
+        <p><strong>yo voy a amarte siempre.</strong></p>
+
+        <p>
+          Voy a amarte cuando estemos juntos.<br/>
+          Voy a amarte incluso en la distancia.<br/>
+          Voy a amarte cuando estemos bien.<br/>
+          Y voy a amarte más todavía cuando la vida se ponga difícil.
+        </p>
+
+        <p>
+          Porque yo no vine a tu vida a jugar…
+        </p>
+
+        <p><strong>Yo vine a quedarme.</strong></p>
+
+        <p>
+          Y si algún día dudas, si algún día el mundo te hace sentir pequeña… recuérdalo, mi amor:
+        </p>
+
+        <p><strong>en mi corazón tú eres inmensa.</strong></p>
+
+        <p>
+          Buenas noches, amor de mi vida.<br/>
+          Que esta noche te abrace el descanso…<br/>
+          y que mis palabras te acaricien el alma como mis brazos lo harían si estuviera ahí contigo.
+        </p>
+
+        <p>
+          Te amo… con una pasión que no cabe en el pecho.<br/>
+          Te amo… como se ama una vez en la vida.<br/>
+          Te amo… como si fueras mi destino.
+        </p>
+
+        <p>
+          Con todo lo que soy,<br/>
+          con todo lo que siento,<br/>
+          con todo lo que me queda por vivir…
+        </p>
+
+        <p><strong>tuyo, completamente.</strong> ❤️</p>
+
+        <div class="signature">
+          <div class="sig-text">Con amor eterno,</div>
+          <div class="name">JUAN KALETH MENDOZA PRIMERA 💜</div>
+        </div>
+
+        <!-- FRASE FINAL EN NEON MORADO -->
+        <div class="final-phrase">
+          <strong class="neon-purple">
+            “Y si el universo me diera mil caminos, mil vidas y mil oportunidades… yo elegiría siempre la misma:
+            <span>amarte</span> con el alma encendida, con el corazón rendido y con la certeza de que mi destino no está en el mundo…
+            está en tu mirada, en tu nombre y en tu existencia, porque mi amor más grande, mi promesa más eterna y mi razón de vivir
+            siempre será… <br></br><span>VALERIA PETRO VILLAZÓN</span>.”
+          </strong>
+          <div class="footer-heart">💜✨</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+  </html>
